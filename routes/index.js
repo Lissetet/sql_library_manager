@@ -23,13 +23,14 @@ router.get('/books', asyncHandler(async (req, res) => {
 
 /* GET Create new book form. */
 router.get('/books/new', asyncHandler(async (req, res) => {
-  // render new-book.pug
+  res.render('new-book');
 }));
 
 /* POST create book. */
 router.post('/books/new', asyncHandler(async (req, res) => {
+  console.log('req.body', req.body)
   const book = await Book.create(req.body);
-  res.json(book);
+  res.redirect('/books/' + book.id);
 }));
 
 /* GET book by id. */
