@@ -28,29 +28,28 @@ router.get('/books/new', asyncHandler(async (req, res) => {
 
 /* POST create book. */
 router.post('/books/new', asyncHandler(async (req, res) => {
-  console.log('req.body', req.body)
   const book = await Book.create(req.body);
-  res.redirect('/books/' + book.id);
+  res.redirect('/books');
 }));
 
-/* GET book by id. */
+/* GET Update book by id form */
 router.get('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.json(book);
+  res.render('update-book', { ...book.dataValues });
 }));
 
 /* PUT update book. */
-router.put('/books/:id', asyncHandler(async (req, res) => {
+router.post('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.update(req.body);
-  res.json(book);
+  res.redirect('/books');
 }));
 
 /* DELETE delete book. */
-router.delete('/books/:id', asyncHandler(async (req, res) => {
+router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.destroy();
-  res.json(book);
+  res.redirect('/books');
 }));
 
 
