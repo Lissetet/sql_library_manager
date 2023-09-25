@@ -14,8 +14,14 @@ const asyncHandler = cb => {
 
 /* GET book listing. */
 router.get('/', asyncHandler(async (req, res) => {
-  const books = await Book.findAll();
-  res.render('index', { books, title: 'Books' });
+  const page = +req.query.page || 1;
+  const limit = 5;
+  const offset = (page - 1) * limit;
+  const books = await Book.findAll({ offset, limit });
+  const count = await Book.count();
+  const pages = Math.ceil(count / limit);
+  const pageNotInRange = page > pages || page < 1;
+  pageNotInRange ? res.redirect(`/`) : res.render('index', { books, title: 'Books', pages, page });
 }));
 
 /* GET Create new book form. */
@@ -32,7 +38,7 @@ router.post('/new', asyncHandler(async (req, res) => {
   } catch (error) {
     if(error.name === 'SequelizeValidationError') {
       book = await Book.build(req.body);
-      res.render('new-book', { book, errors: error.errors })
+      res.render('new-book', { book, errors: error.errors, title: 'Create New Book' })
     } else {
       throw error;
     }
@@ -43,7 +49,7 @@ router.post('/new', asyncHandler(async (req, res) => {
 router.get('/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
-    res.render('update-book', { book, title: book.title });
+    res.render('update-book', { book, title: "Update Book" });
   } else {
     const err = new Error();
     err.message = "Sorry! We couldn't find the book you were looking for."
@@ -54,9 +60,20 @@ router.get('/:id', asyncHandler(async (req, res) => {
 
 /* PUT update book. */
 router.post('/:id', asyncHandler(async (req, res) => {
-  const book = await Book.findByPk(req.params.id);
-  await book.update(req.body);
-  res.redirect('/');
+  let book;
+  try {
+    book = await Book.findByPk(req.params.id);
+    await book.update(req.body);
+    res.redirect('/');
+  } catch (err) {
+    if(err.name === 'SequelizeValidationError') {
+      book = await Book.build(req.body);
+      book.id = req.params.id;
+      res.render('update-book', { book, errors: err.errors, title: 'Update Book' })
+    } else {
+      throw err;
+    }
+  }
 }));
 
 /* DELETE delete book. */

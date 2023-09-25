@@ -1,6 +1,8 @@
 body {
-  padding: 10px 50px 50px;
+  /* padding: 10px 50px 50px; */
   font: 18px "Garamond", serif;
+  width: fit-content;
+  margin: 2rem auto;
 }
 
 a {
@@ -94,4 +96,35 @@ input[type=text] {
 
 .error {
   color: rgb(236, 15, 15);
+}
+
+.pagination {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+tfoot {
+  background: white;
+}
+
+tbody::after {
+  content: "";
+  display: block;
+  height: 20px;
+}
+
+table {
+  width: 90vw;
+  max-width: 1000px;
+}
+
+h1 {
+  text-align: center;
+}
+
+a.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
