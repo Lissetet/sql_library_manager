@@ -42,7 +42,14 @@ router.post('/new', asyncHandler(async (req, res) => {
 /* GET Update book by id form */
 router.get('/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('update-book', { book, title: book.title });
+  if(book) {
+    res.render('update-book', { book, title: book.title });
+  } else {
+    const err = new Error();
+    err.message = "Sorry! We couldn't find the book you were looking for."
+    err.status = 404;
+    res.render('page-not-found', { title: 'Book Not Found', err })
+  }
 }));
 
 /* PUT update book. */
