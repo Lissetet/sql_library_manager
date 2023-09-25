@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= title
+  h1 Update Book
   form(action=`/books/${id}` method='POST')
     include form-errors
     include form

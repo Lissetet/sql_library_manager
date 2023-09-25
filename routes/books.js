@@ -42,7 +42,7 @@ router.post('/new', asyncHandler(async (req, res) => {
 /* GET Update book by id form */
 router.get('/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('update-book', { book, title: 'Update Book' });
+  res.render('update-book', { book, title: book.title });
 }));
 
 /* PUT update book. */
