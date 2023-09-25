@@ -1,0 +1,4 @@
+.search-form 
+  form(method="GET" action="/books") 
+    input(type="text" name="search" placeholder="Search..." value=`${search || ''}`) 
+    input(type="submit" value="Search")

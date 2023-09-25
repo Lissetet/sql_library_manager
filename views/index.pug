@@ -2,8 +2,11 @@ extends layout
 
 block content
   h1= title
-  p 
+  include search-form
+  div.container
     a.button(href="/books/new") Create New Book 
+    if(search)
+      a.button(href="/books") All Books
   table 
     thead 
       tr 
