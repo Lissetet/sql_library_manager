@@ -12,12 +12,46 @@ const asyncHandler = cb => {
   }
 }
 
+/* GET home page - redirects to /books */
+router.get('/', (req, res)=>(res.redirect('/books')));
+
 /* GET book listing. */
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
   res.json(books);
 }));
 
-  // res.render('index', { title: 'Express' });
+/* GET Create new book form. */
+router.get('/books/new', asyncHandler(async (req, res) => {
+  // render new-book.pug
+}));
+
+/* POST create book. */
+router.post('/books/new', asyncHandler(async (req, res) => {
+  const book = await Book.create(req.body);
+  res.json(book);
+}));
+
+/* GET book by id. */
+router.get('/books/:id', asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  res.json(book);
+}));
+
+/* PUT update book. */
+router.put('/books/:id', asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  await book.update(req.body);
+  res.json(book);
+}));
+
+/* DELETE delete book. */
+router.delete('/books/:id', asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  await book.destroy();
+  res.json(book);
+}));
+
+
 
 module.exports = router;
