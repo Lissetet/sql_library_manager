@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const { Op } = require('sequelize');
 const { Book } = require('../models');
 
 const asyncHandler = cb => {
@@ -14,17 +15,42 @@ const asyncHandler = cb => {
 
 /* GET book listing. */
 router.get('/', asyncHandler(async (req, res) => {
+  let books;
+  const search = req.query.search || null;
+
   const pagination = {}
   pagination.page = +req.query.page || 1;
-  pagination.limit = +req.query.limit || 5;
+  pagination.limit = +req.query.limit || 10;
   pagination.offset = (pagination.page - 1) * pagination.limit;
-  pagination.count = await Book.count();
-  pagination.pages = Math.ceil(pagination.count / pagination.limit);
 
-  const books = await Book.findAll({ offset: pagination.offset, limit: pagination.limit });
+  if(search) {
+    const queries = [
+      { title: { [Op.like]: `%${search}%` } },
+      { author: { [Op.like]: `%${search}%` } },
+      { genre: { [Op.like]: `%${search}%` } },
+      { year: { [Op.like]: `%${search}%` } }
+    ]
+    books = await Book.findAll({ 
+      offset: pagination.offset, 
+      limit: pagination.limit, 
+      where: { [Op.or]: queries }
+    })
+    pagination.count = await Book.count({ where: { [Op.or]: queries } });
+  } else {
+    books = await Book.findAll({ offset: pagination.offset, limit: pagination.limit });
+    pagination.count = await Book.count();
+  }
+
+  pagination.pages = Math.ceil(pagination.count / pagination.limit);
   const pageNotInRange = pagination.page > pagination.pages || pagination.page < 1;
 
-  pageNotInRange ? res.redirect(`/`) : res.render('index', { books, title: 'Books', ...pagination });
+  pagination.prevLink = pagination.page <= 1 ? null : 
+    `/books?page=${pagination.page - 1}&limit=${pagination.limit}${search? `&search=${search}` : ''}`;
+
+  pagination.nextLink = pagination.page >= pagination.pages ? null :
+    `/books?page=${pagination.page + 1}&limit=${pagination.limit}${search? `&search=${search}` : ''}`;
+
+  pageNotInRange ? res.redirect(`/`) : res.render('index', { books, title: 'Books', ...pagination, search });
 }));
 
 /* GET Create new book form. */
