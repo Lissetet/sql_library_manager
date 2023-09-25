@@ -14,14 +14,17 @@ const asyncHandler = cb => {
 
 /* GET book listing. */
 router.get('/', asyncHandler(async (req, res) => {
-  const page = +req.query.page || 1;
-  const limit = 5;
-  const offset = (page - 1) * limit;
-  const books = await Book.findAll({ offset, limit });
-  const count = await Book.count();
-  const pages = Math.ceil(count / limit);
-  const pageNotInRange = page > pages || page < 1;
-  pageNotInRange ? res.redirect(`/`) : res.render('index', { books, title: 'Books', pages, page });
+  const pagination = {}
+  pagination.page = +req.query.page || 1;
+  pagination.limit = +req.query.limit || 5;
+  pagination.offset = (pagination.page - 1) * pagination.limit;
+  pagination.count = await Book.count();
+  pagination.pages = Math.ceil(pagination.count / pagination.limit);
+
+  const books = await Book.findAll({ offset: pagination.offset, limit: pagination.limit });
+  const pageNotInRange = pagination.page > pagination.pages || pagination.page < 1;
+
+  pageNotInRange ? res.redirect(`/`) : res.render('index', { books, title: 'Books', ...pagination });
 }));
 
 /* GET Create new book form. */

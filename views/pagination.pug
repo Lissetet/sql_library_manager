@@ -2,7 +2,7 @@ tfoot
   tr
     td(colspan='4')
       div.pagination
-        a(href=`/books?page=${page-1}`, class=`button${page <= 1 ? ' disabled' : ' '}`) Previous Page
+        a(href=`/books?page=${page-1}&limit=${limit}`, class=`button${page <= 1 ? ' disabled' : ' '}`) Previous Page
 
         span Page <strong>#{page}</strong> of <strong>#{pages}</strong>
-        a(href=`/books?page=${page+1}`, class=`button${page >= pages ? ' disabled' : ' '}`) Next Page
+        a(href=`/books?page=${page+1}&limit=${limit}`, class=`button${page >= pages ? ' disabled' : ' '}`) Next Page
