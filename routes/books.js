@@ -20,7 +20,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
   const pagination = {}
   pagination.page = +req.query.page || 1;
-  pagination.limit = +req.query.limit || 10;
+  pagination.limit = +req.query.limit || 5;
   pagination.offset = (pagination.page - 1) * pagination.limit;
 
   if(search) {
