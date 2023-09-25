@@ -1,29 +1,24 @@
-doctype html
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title= title
-    link(rel="stylesheet", href="/stylesheets/style.css")
-  body 
-    h1 Update Book
-    form(action=`/books/${id}` method='POST')
-      p
-        label(for='title') Title
-        input#title(name='title' type='text', value=title)
-      p
-        label(for='author') Author
-        input#author(name='author' type='text', value=author)
-      p
-        label(for='genre') Genre
-        input#genre(name='genre' type='text', value=genre)
-      p
-        label(for='year') Year
-        input#year(name='year' type='text', value=year)
-      p
-        input(type='submit' value='Update Book')
-    form(action=`/books/${id}/delete` method='POST', onsubmit='return confirm("Are you sure you want to delete this book?")')
-      p
-        a.button(href='/books') Cancel 
-      p 
-        input(type='submit' value='Delete Book')
+extends layout
+
+block content
+  h1 Update Book
+  form(action=`/books/${id}` method='POST')
+    p
+      label(for='title') Title
+      input#title(name='title' type='text', value=title)
+    p
+      label(for='author') Author
+      input#author(name='author' type='text', value=author)
+    p
+      label(for='genre') Genre
+      input#genre(name='genre' type='text', value=genre)
+    p
+      label(for='year') Year
+      input#year(name='year' type='text', value=year)
+    p
+      input(type='submit' value='Update Book')
+  form(action=`/books/${id}/delete` method='POST', onsubmit='return confirm("Are you sure you want to delete this book?")')
+    p
+      a.button(href='/books') Cancel 
+    p 
+      input(type='submit' value='Delete Book')
