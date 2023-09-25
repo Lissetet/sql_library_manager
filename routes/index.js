@@ -18,7 +18,7 @@ router.get('/', (req, res)=>(res.redirect('/books')));
 /* GET book listing. */
 router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
-  res.json(books);
+  res.render('all-books', { books });
 }));
 
 /* GET Create new book form. */
