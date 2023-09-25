@@ -20,7 +20,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
 /* GET Create new book form. */
 router.get('/new', asyncHandler(async (req, res) => {
-  res.render('new-book', { book: {} });
+  res.render('new-book', { book: {}, title: 'Create New Book' });
 }));
 
 /* POST create book. */
@@ -42,7 +42,7 @@ router.post('/new', asyncHandler(async (req, res) => {
 /* GET Update book by id form */
 router.get('/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('update-book', { ...book.dataValues });
+  res.render('update-book', { book, title: 'Update Book' });
 }));
 
 /* PUT update book. */
